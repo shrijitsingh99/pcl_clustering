@@ -71,22 +71,10 @@ main (int argc, char** argv)
     *cloud_filtered = *cloud_f;
   }
 
-  // Creating the KdTree object for the search method of the extraction
-  // pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-  // tree->setInputCloud (cloud_filtered);
-
   std::vector<pcl::PointIndices> cluster_indices;
-  // pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-  // ec.setClusterTolerance (0.02); // 2cm
-  // ec.setMinClusterSize (100);
-  // ec.setMaxClusterSize (25000);
-  // ec.setSearchMethod (tree);
-  // ec.setInputCloud (cloud_filtered);
-  // ec.extract (cluster_indices);
 
-  pcl::extractEuclideanClusters<pcl::PointXYZ>(*cloud_filtered, 0.02, cluster_indices, 100, 25000);
-  // typename pcl::PointCloud<pcl::PointXYZ>::Ptr cloudPtr = cloud_filtered->makeShared();
-  // pcl::gpu::extractEuclideanClusters(cloud_filtered, 0.02, cluster_indices, 100, 25000);
+  pcl::extractEuclideanClusters<pcl::PointXYZ>(pcl::executor::cpu{}, *cloud_filtered, 0.02, cluster_indices, 100, 25000);
+  // pcl::extractEuclideanClusters<pcl::PointXYZ>(pcl::executor::gpu{}, *cloud_filtered, 0.02, cluster_indices, 100, 25000);
 
   int j = 0;
   for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it)
